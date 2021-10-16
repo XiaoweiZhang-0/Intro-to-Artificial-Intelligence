@@ -36,7 +36,7 @@ def isBlocked(maze, x, y):
     else:
         return False
 def findRoute():
-    return none
+    return
 
 def findNeighbors(Cell, openList, goal, maze):
     curCell = Cell
@@ -60,7 +60,7 @@ def aStar():
     maze = MG.generateMaze()
     startCoord = (random.randint(0, 100), random.randint(0, 100))
     goal = (random.randint(0, 100), random.randint(0, 100))
-    startHValue = hValue(startCoord, goalCoord)
+    startHValue = hValue(startCoord, goal)
     startCell = Cell(startCoord, startHValue, 0)
     openList = [startCell]
     curCell = startCell
@@ -69,7 +69,4 @@ def aStar():
         findNeighbors(curCell, openList)
         curCell = BH.pop(list)
         if isBlocked(maze, curCell.coord[0], curCell.coord[1]):
-            
-    #
-    
-aStar()
+            print("")
