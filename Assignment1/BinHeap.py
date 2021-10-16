@@ -3,6 +3,7 @@ import random
 
 # insert function for breaking ties with smaller g-value
 def insert(cell, openList):
+    openList.append(cell)
     i = len(openList)
     while i // 2 > 0:
         if openList[i].fValue < openList[i // 2].fValue:
@@ -19,7 +20,6 @@ def insert(cell, openList):
                 openList[i // 2] = openList[i]
                 openList[i] = tmp
         i = i // 2
-    openList[i] = cell
 
 def sort(openList, i):
     size = len(openList)
