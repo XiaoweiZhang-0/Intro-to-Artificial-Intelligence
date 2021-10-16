@@ -38,8 +38,8 @@ def isBlocked(maze, x, y):
 def findRoute():
     return
 
-def findNeighbors(Cell, openList, goal, maze):
-    curCell = Cell
+def findNeighbors(curCell, openList, goal, maze):
+    curCell = curCell
     x = curCell.coord[0]
     y = curCell.coord[1]
     neighbors = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
@@ -52,7 +52,7 @@ def findNeighbors(Cell, openList, goal, maze):
             else:
                 gVal = curCell.gValue + 1
                 fVal = gVal + hValue(coord, goal)
-            newCell = Cell(neighbor, fVal, gVal)
+            newCell = Cell(coord, fVal, gVal)
             BH.insert(newCell, openList)
 
 def aStar():
@@ -64,9 +64,11 @@ def aStar():
     startCell = Cell(startCoord, startHValue, 0)
     openList = [startCell]
     curCell = startCell
-    
+
     while curCell.coord != goal:
-        findNeighbors(curCell, openList)
+        findNeighbors(curCell, openList, goal, maze)
         curCell = BH.pop(list)
         if isBlocked(maze, curCell.coord[0], curCell.coord[1]):
-            print("")
+            return("No route found")
+        print(curCell.coord)
+aStar()
