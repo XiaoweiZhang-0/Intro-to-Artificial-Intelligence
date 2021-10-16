@@ -47,19 +47,18 @@ def generateMaze():
         # print(unvisited)
             findNeighbor(row, col, unvisited, stack, maze)
             # print('end search')
-    cnt_blk = 0
-    cnt_unblk = 0
-    for i in range(0, num_rows):
-        for j in range(0, num_cols):
-            if(maze[(i,j)])==0:
-                cnt_blk = cnt_blk+1
-                print('x', end='')
-            else:
-                cnt_unblk = cnt_unblk+1
-                print(' ', end='')
-        print('')
-    print('block ratio is ' + str(cnt_blk/(cnt_unblk+cnt_blk)))
-generateMaze()
-
+    # cnt_blk = 0
+    # cnt_unblk = 0
+    # for i in range(0, num_rows):
+    #     for j in range(0, num_cols):
+    #         if(maze[(i,j)])==0:
+    #             cnt_blk = cnt_blk+1
+    #             print('x', end='')
+    #         else:
+    #             cnt_unblk = cnt_unblk+1
+    #             print(' ', end='')
+    #     print('')
+    # print('block ratio is ' + str(cnt_blk/(cnt_unblk+cnt_blk)))
+    return maze
 
 
