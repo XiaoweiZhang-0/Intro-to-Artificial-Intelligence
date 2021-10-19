@@ -4,7 +4,7 @@ import random
 # insert function for breaking ties with smaller g-value
 def insert(cell, openList):
     openList.append(cell)
-    i = len(openList)
+    i = len(openList) - 1
     while i // 2 > 0:
         if openList[i].fValue < openList[i // 2].fValue:
             tmp = openList[i // 2]
