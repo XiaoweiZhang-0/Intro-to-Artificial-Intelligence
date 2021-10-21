@@ -1,5 +1,4 @@
 # binary min heap
-import random
 
 # class Cell:
 #     def __init__(self, coord, fValue, gValue):
