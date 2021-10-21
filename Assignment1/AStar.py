@@ -4,6 +4,8 @@ import random
 import numpy as np
 import BinHeap_large as BH_l
 import BinHeap_small as BH_s
+import time
+
 # 
 # OpenList：list with binary heap
 # Cell: current cell, includes coordinates, f_value, g_value
@@ -19,8 +21,8 @@ import BinHeap_small as BH_s
 #           input: blockedCells, curCell, goal
 #           output: Calculated Path
 
-num_rows = 5
-num_cols = 5
+num_rows = 101
+num_cols = 101
 
 class Cell:
     def __init__(self, coord, fValue, gValue):
@@ -46,6 +48,7 @@ def isBlocked(blockedList, neighbor):
         return True
     else:
         return False
+
 def findRoute_gs(goal, openList, closedList, search, counter, blockedList, gValue):
     # print('search is ',search)
     # print('-------------------')
@@ -66,7 +69,6 @@ def findRoute_gs(goal, openList, closedList, search, counter, blockedList, gValu
     # print('end find route -----------------')
     return path
     
-
 def findNeighbors_gs(curCell, openList, goal, search, counter, path, blockedList, closedList, gValue):
     x = curCell.coord[0]
     y = curCell.coord[1]
@@ -91,7 +93,7 @@ def findNeighbors_gs(curCell, openList, goal, search, counter, path, blockedList
                 # print('new cell is ', newCell.coord)
                 BH_s.insert(newCell, openList)
 
-def aStar_gs(start, goal, maze, blockedList, expandedCells):
+def aStar_gs(start, goal, maze, blockedList):
     counter = 0
     search = np.zeros((num_rows, num_cols))
     startHValue = hValue(start, goal)
@@ -109,8 +111,8 @@ def aStar_gs(start, goal, maze, blockedList, expandedCells):
         # print('closed list ',closedList )
         BH_s.insert(startCell, openList)
         path = findRoute_gs(goal, openList, closedList, search, counter, blockedList, gValue)
-        expandedCells = expandedCells + len(closedList)
-        print(expandedCells)
+        # expandedCells = expandedCells + len(closedList)
+        # print(expandedCells)
         if not path:
             print("There is no path from startpoint to goal")
             return False
@@ -163,7 +165,6 @@ def findRoute_gl(goal, openList, closedList, search, counter, blockedList, gValu
     # print('end find route -----------------')
     return path
     
-
 def findNeighbors_gl(curCell, openList, goal, search, counter, path, blockedList, closedList, gValue):
     x = curCell.coord[0]
     y = curCell.coord[1]
@@ -188,7 +189,7 @@ def findNeighbors_gl(curCell, openList, goal, search, counter, path, blockedList
                 # print('new cell is ', newCell.coord)
                 BH_l.insert(newCell, openList)
 
-def aStar_gl(start, goal, maze, blockedList, expandedCells):
+def aStar_gl(start, goal, maze, blockedList):
     counter = 0
     search = np.zeros((num_rows, num_cols))
     startHValue = hValue(start, goal)
@@ -206,8 +207,8 @@ def aStar_gl(start, goal, maze, blockedList, expandedCells):
         # print('closed list ',closedList )
         BH_l.insert(startCell, openList)
         path = findRoute_gl(goal, openList, closedList, search, counter, blockedList, gValue)
-        expandedCells = expandedCells + len(closedList)
-        print(expandedCells)
+        # expandedCells = expandedCells + len(closedList)
+        # print(expandedCells)
         if not path:
             print("There is no path from startpoint to goal")
             return False
@@ -239,6 +240,7 @@ def aStar_gl(start, goal, maze, blockedList, expandedCells):
         # print(start)
         # startCell.coord = goal
         # print('start coord now is ', startCell.coord)
+
 def main():
     # initialize 
     maze = MG.generateMaze(num_rows, num_cols)
@@ -263,10 +265,16 @@ def main():
         print("start point is the same as goal")
         return
     blockedList = []
-    expandedCells_For = 0
-    expandedCells_back = 0
-    aStar_gs(start, goal, maze, blockedList, expandedCells_For)
-    aStar_gl(goal, start, maze, blockedList, expandedCells_back)
+    # expandedCells_For = 0
+    # expandedCells_back = 0
+    start1 = time.time()
+    aStar_gs(start, goal, maze, blockedList)
+    end1 = time.time()
+
+    start2 = time.time()
+    aStar_gl(goal, start, maze, blockedList)
+    end2 = time.time()
+    
     maze[start] = 2
     maze[goal] = 4
 
@@ -290,4 +298,9 @@ def main():
     for l in range(0, num_rows+2):
         print('w', end='')
     print('')
+
+    runtime1 = end1 - start1
+    runtime2 = end2 - start2
+    print("runtime with smaller g value: {}, runtime with larger g value:{}".format(runtime1, runtime2))
+
 main()
