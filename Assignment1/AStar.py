@@ -18,15 +18,17 @@ import BinHeap_small as BH_s
 # find_route: find the route from current cell to the goal cell, returns a list = Cal_Path
 #           input: blockedCells, curCell, goal
 #           output: Calculated Path
+
 num_rows = 101
 num_cols = 101
-# calculate Manhattan distance as h value
+
 class Cell:
     def __init__(self, coord, fValue, gValue):
         self.coord = coord
         self.fValue = fValue
         self.gValue = gValue
 
+# calculate Manhattan distance as h value
 def hValue(currCoord, goalCoord):
     return abs(currCoord[0] - goalCoord[0]) + abs(currCoord[1] - goalCoord[1])
 
@@ -35,6 +37,7 @@ def isValid(x, y):
         return True
     else:
         return False
+
 def isBlocked(blockedList, neighbor):
     # print('blocked list is',blockedList)
     # print('neighbor is ', neighbor)

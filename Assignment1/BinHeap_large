@@ -1,11 +1,3 @@
-# binary min heap
-
-# class Cell:
-#     def __init__(self, coord, fValue, gValue):
-#         self.coord = coord
-#         self.fValue = fValue
-#         self.gValue = gValue
-
 # insert function for breaking ties with smaller g-value
 def insert(cell, openList):
     openList.append(cell)
@@ -18,10 +10,8 @@ def insert(cell, openList):
             openList[i] = tmp
         # two cells have the same f-value
         if openList[i].fValue == openList[(i-1) // 2].fValue:
-            # break ties with smaller g-value
-            if openList[i].gValue < openList[(i-1) // 2].gValue:
             # break ties with bigger g-value
-            # if openList[i].gValue < openList[(i-1) // 2].gValue:
+            if openList[i].gValue > openList[(i-1) // 2].gValue:
                 tmp = openList[(i-1) // 2]
                 openList[(i-1) // 2] = openList[i]
                 openList[i] = tmp
@@ -54,10 +44,8 @@ def sort(openList):
             openList[smallerChild] = tmp
         # two cells have the same f-value
         if openList[i].fValue == openList[smallerChild].fValue:
-            # break ties with smaller g-value
-            if openList[i].gValue > openList[smallerChild].gValue:
             # break ties with bigger g-value
-            # if openList[i].gValue < openList[smallerChild].gValue:
+            if openList[i].gValue < openList[smallerChild].gValue:
                 tmp = openList[i]
                 openList[i] = openList[smallerChild]
                 openList[smallerChild] = tmp
@@ -74,64 +62,3 @@ def pop(openList):
     if size > 2:
         sort(openList)
     return minCell
-
-# test cases
-# cell1 = Cell((2,1), 2, 0)
-# cell2 = Cell((2,5), 5, 3)
-# cell3 = Cell((4,5), 1, 5)
-# cell4 = Cell((4,7), 5, 2)
-# cell5 = Cell((3,4), 3, 3)
-# cell6 = Cell((3,7), 3, 2)
-
-# openList = []
-# insert(cell1, openList)
-# insert(cell2, openList)
-# insert(cell3, openList)
-# insert(cell4, openList)
-# insert(cell5, openList)
-# insert(cell6, openList)
-
-# for cell in openList:
-#     print(cell.coord)
-# print("------------------")
-
-# print(pop(openList).coord)
-# print("------------------")
-# for cell in openList:
-#     print(cell.coord)
-
-# print("----------####--------")
-# print(pop(openList).coord)
-# print("------------------")
-# for cell in openList:
-#     print(cell.coord)
-
-# print("----------####--------")
-# print(pop(openList).coord)
-# print("------------------")
-# for cell in openList:
-#     print(cell.coord)
-
-# print("----------####--------")
-# print(pop(openList).coord)
-# print("------------------")
-# for cell in openList:
-#     print(cell.coord)
-
-# print("----------####--------")
-# print(pop(openList).coord)
-# print("------------------")
-# for cell in openList:
-#     print(cell.coord)
-
-# print("----------####--------")
-# print(pop(openList).coord)
-# print("------------------")
-# for cell in openList:
-#     print(cell.coord)
-
-# print("----------####--------")
-# print(pop(openList))
-# print("------------------")
-# for cell in openList:
-#     print(cell.coord)

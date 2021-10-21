@@ -20,8 +20,6 @@ def insert(cell, openList):
         if openList[i].fValue == openList[(i-1) // 2].fValue:
             # break ties with smaller g-value
             if openList[i].gValue < openList[(i-1) // 2].gValue:
-            # break ties with bigger g-value
-            # if openList[i].gValue < openList[(i-1) // 2].gValue:
                 tmp = openList[(i-1) // 2]
                 openList[(i-1) // 2] = openList[i]
                 openList[i] = tmp
@@ -56,8 +54,6 @@ def sort(openList):
         if openList[i].fValue == openList[smallerChild].fValue:
             # break ties with smaller g-value
             if openList[i].gValue > openList[smallerChild].gValue:
-            # break ties with bigger g-value
-            # if openList[i].gValue < openList[smallerChild].gValue:
                 tmp = openList[i]
                 openList[i] = openList[smallerChild]
                 openList[smallerChild] = tmp
