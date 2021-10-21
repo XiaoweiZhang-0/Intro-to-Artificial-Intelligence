@@ -3,8 +3,6 @@ import numpy as np
 import random
 import sys
 
-num_rows = 101
-num_cols = 101
 
 np.set_printoptions(threshold=sys.maxsize)
 def findNeighbor(row, col, unvisited, stack, maze):
@@ -25,7 +23,7 @@ def findNeighbor(row, col, unvisited, stack, maze):
         if (row, col) in unvisited:
             unvisited.remove((row, col))
     
-def generateMaze():
+def generateMaze(num_rows, num_cols):
     maze = np.zeros((num_rows, num_cols))
     stack = []
     unvisited = list()
@@ -49,7 +47,11 @@ def generateMaze():
             # print('end search')
     # cnt_blk = 0
     # cnt_unblk = 0
+    # for l in range(0, num_rows+2):
+    #     print('w', end='')
+    # print('')
     # for i in range(0, num_rows):
+    #     print('w', end='')
     #     for j in range(0, num_cols):
     #         if(maze[(i,j)])==0:
     #             cnt_blk = cnt_blk+1
@@ -57,8 +59,10 @@ def generateMaze():
     #         else:
     #             cnt_unblk = cnt_unblk+1
     #             print(' ', end='')
-    #     print('')
+    #     print('w')
+    # for l in range(0, num_rows+2):
+    #     print('w', end='')
+    # print('')
     # print('block ratio is ' + str(cnt_blk/(cnt_unblk+cnt_blk)))
     return maze
-
 
