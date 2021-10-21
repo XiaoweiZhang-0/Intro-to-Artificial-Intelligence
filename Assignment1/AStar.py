@@ -3,6 +3,7 @@ import MazeGenerator as MG
 import random
 import numpy as np
 import BinHeap as BH
+import time
 
 # 
 # OpenList：list with binary heap
@@ -19,8 +20,8 @@ import BinHeap as BH
 #           input: blockedCells, curCell, goal
 #           output: Calculated Path
 
-num_rows = 101
-num_cols = 101
+num_rows = 5
+num_cols = 5
 
 class Cell:
     def __init__(self, coord, fValue, gValue):
@@ -163,7 +164,10 @@ def main():
         print("start point is the same as goal")
         return
     blockedList = []
+    startTime = time.time()
     aStar(start, goal, maze, blockedList)
+    endTime = time.time()
+    runTime = endTime - startTime
     maze[start] = 2
     maze[goal] = 4
 
@@ -187,5 +191,6 @@ def main():
     for l in range(0, num_rows+2):
         print('w', end='')
     print('')
-    
+    print ("run time: {}".format(runTime))
+
 main()
