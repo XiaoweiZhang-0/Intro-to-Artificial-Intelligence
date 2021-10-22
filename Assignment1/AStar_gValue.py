@@ -1,4 +1,3 @@
-# from numpy.core.shape_base import block
 import MazeGenerator as MG
 import random
 import numpy as np
@@ -93,6 +92,7 @@ def findNeighbors_gs(curCell, openList, goal, search, counter, path, blockedList
                 # print('new cell is ', newCell.coord)
                 BH_s.insert(newCell, openList)
 
+# break ties in favor of smaller g-values
 def aStar_gs(start, goal, maze, blockedList):
     counter = 0
     search = np.zeros((num_rows, num_cols))
@@ -144,7 +144,7 @@ def aStar_gs(start, goal, maze, blockedList):
         # print(start)
         # startCell.coord = goal
         # print('start coord now is ', startCell.coord)
-        
+ 
 def findRoute_gl(goal, openList, closedList, search, counter, blockedList, gValue):
     # print('search is ',search)
     # print('-------------------')
@@ -189,6 +189,7 @@ def findNeighbors_gl(curCell, openList, goal, search, counter, path, blockedList
                 # print('new cell is ', newCell.coord)
                 BH_l.insert(newCell, openList)
 
+# break ties in favor of larger g-values
 def aStar_gl(start, goal, maze, blockedList):
     counter = 0
     search = np.zeros((num_rows, num_cols))
@@ -267,7 +268,7 @@ def main():
     blockedList = []
     # expandedCells_For = 0
     # expandedCells_back = 0
-    start1 = time.time()
+    startTime1 = time.time()
     aStar_gs(start, goal, maze, blockedList)
     end1 = time.time()
     
@@ -300,8 +301,8 @@ def main():
         print('w', end='')
     print('')
 
-    runtime1 = end1 - start1
-    runtime2 = end2 - start2
-    print("runtime with smaller g value: {}, runtime with larger g value:{}".format(runtime1, runtime2))
+    runtime1 = endTime1 - startTime1
+    runtime2 = endTime2 - startTime2
+    print("runtime in favor of smaller g-values: {}, runtime in favor of larger g-values: {}".format(runtime1, runtime2))
 
 main()
