@@ -4,6 +4,7 @@ import numpy as np
 import BinHeap_large as BH_l
 import BinHeap_small as BH_s
 import time
+import matplotlib.pyplot as plt
 
 # 
 # OpenList：list with binary heap
@@ -114,7 +115,7 @@ def aStar_gs(start, goal, maze, blockedList):
         # expandedCells = expandedCells + len(closedList)
         # print(expandedCells)
         if not path:
-            print("There is no path from startpoint to goal")
+            # print("There is no path from startpoint to goal")
             return False
         pathList = []
         currCoord = goal
@@ -211,7 +212,7 @@ def aStar_gl(start, goal, maze, blockedList):
         # expandedCells = expandedCells + len(closedList)
         # print(expandedCells)
         if not path:
-            print("There is no path from startpoint to goal")
+            # print("There is no path from startpoint to goal")
             return False
         pathList = []
         currCoord = goal
@@ -243,12 +244,18 @@ def aStar_gl(start, goal, maze, blockedList):
         # print('start coord now is ', startCell.coord)
 
 def main():
+    # initialize
     # initialize 
-    maze = MG.generateMaze(num_rows, num_cols)
-    start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-    print("startpoint is ", start)
-    goal = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-    print("goalpoint is ", goal)
+    case = []
+    gs_list = []
+    gl_list = [] 
+    caseNum = 0
+    while caseNum < 50:
+        maze = MG.generateMaze(num_rows, num_cols)
+        start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
+        # print("startpoint is ", start)
+        goal = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
+        # print("goalpoint is ", goal)
 
     # maze = np.ones((num_rows, num_cols))
     # maze[(1,2)] = 0
@@ -259,50 +266,61 @@ def main():
     # maze[(4,3)] = 0
     # start = (4, 2)
     # goal = (4, 4)
-    if maze[start[0]][start[1]] == 0 or maze[goal[0]][goal[1]] == 0:
-        print("there is no path from startpoint to goal")
-        return
-    elif start == goal:
-        print("start point is the same as goal")
-        return
-    blockedList = []
+        if maze[start[0]][start[1]] == 0 or maze[goal[0]][goal[1]] == 0:
+            # print("there is no path from startpoint to goal")
+            # return
+            continue
+        elif start == goal:
+            # print("start point is the same as goal")
+            # return
+            continue
+        blockedList = []
     # expandedCells_For = 0
     # expandedCells_back = 0
-    startTime1 = time.time()
-    aStar_gs(start, goal, maze, blockedList)
-    endTime1 = time.time()
+        startTime1 = time.time()
+        aStar_gs(start, goal, maze, blockedList)
+        endTime1 = time.time()
     
-    blockedList = []
-    startTime2 = time.time()
-    aStar_gl(goal, start, maze, blockedList)
-    endTime2 = time.time()
+        blockedList = []
+        startTime2 = time.time()
+        aStar_gl(start, goal, maze, blockedList)
+        endTime2 = time.time()
     
-    maze[start] = 2
-    maze[goal] = 4
+    # maze[start] = 2
+    # maze[goal] = 4
 
-    for l in range(0, num_rows+2):
-        print('w', end='')
-    print('')
-    for i in range(0, num_rows):
-        print('w', end='')
-        for j in range(0, num_cols):
-            if(maze[(i,j)])==0:
-                print('x', end='')
-            elif (maze[(i,j)]) == 1:
-                print(' ', end='')
-            elif (maze[(i, j)]) == 2:
-                print('s', end='')
-            elif (maze[(i, j)]) == 3:
-                print('p', end='')
-            else:
-                print('t', end='')
-        print('w')
-    for l in range(0, num_rows+2):
-        print('w', end='')
-    print('')
+    # for l in range(0, num_rows+2):
+    #     print('w', end='')
+    # print('')
+    # for i in range(0, num_rows):
+    #     print('w', end='')
+    #     for j in range(0, num_cols):
+    #         if(maze[(i,j)])==0:
+    #             print('x', end='')
+    #         elif (maze[(i,j)]) == 1:
+    #             print(' ', end='')
+    #         elif (maze[(i, j)]) == 2:
+    #             print('s', end='')
+    #         elif (maze[(i, j)]) == 3:
+    #             print('p', end='')
+    #         else:
+    #             print('t', end='')
+    #     print('w')
+    # for l in range(0, num_rows+2):
+    #     print('w', end='')
+    # print('')
 
-    runtime1 = endTime1 - startTime1
-    runtime2 = endTime2 - startTime2
-    print("runtime in favor of smaller g-values: {}, runtime in favor of larger g-values: {}".format(runtime1, runtime2))
-
+        runtime1 = endTime1 - startTime1
+        runtime2 = endTime2 - startTime2
+        gs_list.append(runtime1)
+        gl_list.append(runtime2)
+        if runtime1:
+            case.append(caseNum)
+        caseNum = caseNum + 1
+    # print("runtime in favor of smaller g-values: {}, runtime in favor of larger g-values: {}".format(runtime1, runtime2))
+    plt.plot(case, gs_list, color="r")
+    plt.plot(case, gl_list, color="b")
+    # print(gs_list)
+    # print(gl_list)
+    plt.show()
 main()
