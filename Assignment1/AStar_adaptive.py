@@ -5,6 +5,7 @@ import numpy as np
 import BinHeap_large as BH
 # import BinHeap_small as BH
 import time
+import matplotlib.pyplot as plt
 
 # 
 # OpenList：list with binary heap
@@ -253,9 +254,11 @@ def aStar_adaptive(start, goal, maze, blockedList, hVal):
         # print('start coord now is ', startCell.coord)
 def main():
     # initialize
+    case = []
     forward_list = []
     adaptive_list = [] 
-    for i in range(0, 5):
+    caseNum = 0
+    while caseNum < 5:
         maze = MG.generateMaze(num_rows, num_cols)
         start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
         print("startpoint is ", start)
@@ -347,8 +350,16 @@ def main():
         runtime2 = end2 - start2
         forward_list.append(runtime1)
         adaptive_list.append(runtime2)
-        print("runtime for forward: {}, runtime for adaptive:{}".format(runtime1, runtime2))
+        if runtime1:
+            case.append(caseNum)
+        caseNum = caseNum + 1
+        # print("runtime for forward: {}, runtime for adaptive:{}".format(runtime1, runtime2))
     print(forward_list)
     print(adaptive_list)
+    print(case)
+    plt.plot(case, forward_list)
+    plt.plot(case, adaptive_list)
+    plt.show()
+
    
 main()
