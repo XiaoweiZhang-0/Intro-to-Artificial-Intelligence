@@ -21,8 +21,8 @@ import time
 #           input: blockedCells, curCell, goal
 #           output: Calculated Path
 
-num_rows = 101
-num_cols = 101
+num_rows = 5
+num_cols = 5
 
 class Cell:
     def __init__(self, coord, fValue, gValue):
@@ -267,14 +267,18 @@ def main():
     blockedList = []
     # expandedCells_For = 0
     # expandedCells_back = 0
-    start1 = time.time()
+    startTime1 = time.time()
     aStar_gs(start, goal, maze, blockedList)
-    end1 = time.time()
+    endTime1 = time.time()
 
-    start2 = time.time()
-    aStar_gl(goal, start, maze, blockedList)
-    end2 = time.time()
+    startTime2 = time.time()
+    aStar_gl(start, goal, maze, blockedList)
+    endTime2 = time.time()
     
+    startTime3 = time.time()
+    aStar_gl(goal, start, maze, blockedList)
+    endTime3 = time.time()
+
     maze[start] = 2
     maze[goal] = 4
 
@@ -299,8 +303,10 @@ def main():
         print('w', end='')
     print('')
 
-    runtime1 = end1 - start1
-    runtime2 = end2 - start2
-    print("runtime with smaller g value: {}, runtime with larger g value:{}".format(runtime1, runtime2))
+    runtime1 = endTime1 - startTime1
+    runtime2 = endTime2 - startTime2
+    runtime3 = endTime3 - startTime3
+    print("runtime with smaller g value: {}, runtime with larger g value: {}".format(runtime1, runtime2))
+    print("forward runtime: {}, backward runtime: {}".format(runtime2, runtime3))
 
 main()
