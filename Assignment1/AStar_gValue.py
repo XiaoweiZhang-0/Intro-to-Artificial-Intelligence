@@ -270,12 +270,12 @@ def main():
     # expandedCells_back = 0
     startTime1 = time.time()
     aStar_gs(start, goal, maze, blockedList)
-    end1 = time.time()
+    endTime1 = time.time()
     
     blockedList = []
-    start2 = time.time()
+    startTime2 = time.time()
     aStar_gl(goal, start, maze, blockedList)
-    end2 = time.time()
+    endTime2 = time.time()
     
     maze[start] = 2
     maze[goal] = 4
