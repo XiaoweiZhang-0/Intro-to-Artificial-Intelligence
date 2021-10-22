@@ -354,9 +354,9 @@ def main():
             case.append(caseNum)
         caseNum = caseNum + 1
         # print("runtime for forward: {}, runtime for adaptive:{}".format(runtime1, runtime2))
-    print(forward_list)
-    print(adaptive_list)
-    print(case)
+    # print(forward_list)
+    # print(adaptive_list)
+    # print(case)
     plt.plot(case, forward_list)
     plt.plot(case, adaptive_list)
     plt.show()
