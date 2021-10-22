@@ -361,5 +361,4 @@ def main():
     plt.plot(case, adaptive_list)
     plt.show()
 
-   
 main()
