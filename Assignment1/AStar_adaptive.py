@@ -118,7 +118,7 @@ def aStar_forward(start, goal, maze, blockedList):
         # expandedCells = expandedCells + len(closedList)
         # print(expandedCells)
         if not path:
-            print("There is no path from startpoint to goal")
+            # print("There is no path from startpoint to goal")
             return False
         pathList = []
         currCoord = goal
@@ -221,7 +221,7 @@ def aStar_adaptive(start, goal, maze, blockedList, hVal):
         # expandedCells = expandedCells + len(closedList)
         # print(expandedCells)
         if not path:
-            print("There is no path from startpoint to goal")
+            # print("There is no path from startpoint to goal")
             return False
         pathList = []
         currCoord = goal
@@ -261,9 +261,9 @@ def main():
     while caseNum < 5:
         maze = MG.generateMaze(num_rows, num_cols)
         start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-        print("startpoint is ", start)
+        # print("startpoint is ", start)
         goal = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-        print("goalpoint is ", goal)
+        # print("goalpoint is ", goal)
 
     # maze = np.ones((num_rows, num_cols))
     # maze[(1,2)] = 0
@@ -275,11 +275,11 @@ def main():
     # start = (4, 2)
     # goal = (4, 4)
         if maze[start[0]][start[1]] == 0 or maze[goal[0]][goal[1]] == 0:
-            print("there is no path from startpoint to goal")
+            # print("there is no path from startpoint to goal")
             # return False
             continue
         elif start == goal:
-            print("start point is the same as goal")
+            # print("start point is the same as goal")
             # return False
             continue
         blockedList = []
