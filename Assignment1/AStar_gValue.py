@@ -270,7 +270,8 @@ def main():
     start1 = time.time()
     aStar_gs(start, goal, maze, blockedList)
     end1 = time.time()
-
+    
+    blockedList = []
     start2 = time.time()
     aStar_gl(goal, start, maze, blockedList)
     end2 = time.time()

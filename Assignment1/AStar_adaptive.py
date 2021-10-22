@@ -34,6 +34,9 @@ class Cell:
 def hValue(currCoord, goalCoord):
     return abs(currCoord[0] - goalCoord[0]) + abs(currCoord[1] - goalCoord[1])
 
+def hValue_new(gSgoal, gS):
+    return gSgoal - gS
+
 def isValid(x, y):
     if(x >= 0 and x <= num_cols-1 and y >= 0 and y <= num_rows-1):
         return True
@@ -118,13 +121,13 @@ def aStar_forward(start, goal, maze, blockedList):
             return False
         pathList = []
         currCoord = goal
-        print('Calculated forward path is ', end='')
+        # print('Calculated forward path is ', end='')
         while currCoord != startCell.coord:
-            print(currCoord, '->', end='')
+            # print(currCoord, '->', end='')
             pathList.append(currCoord)
             currCoord = path[currCoord].coord
         # pathList.append(start)
-        print(startCell.coord, end='')
+        # print(startCell.coord, end='')
         pathList.reverse()
         for coord in pathList:
             if maze[coord] == 0:
@@ -145,8 +148,8 @@ def aStar_forward(start, goal, maze, blockedList):
         # print(start)
         # startCell.coord = goal
         # print('start coord now is ', startCell.coord)
-        
-def findRoute_backward(goal, openList, closedList, search, counter, blockedList, gValue):
+
+def findRoute_adaptive(goal, openList, closedList, search, counter, blockedList, gValue, hVal):
     # print('search is ',search)
     # print('-------------------')
     curCell = BH.pop(openList)
@@ -157,7 +160,7 @@ def findRoute_backward(goal, openList, closedList, search, counter, blockedList,
     closedList.append(curCell.coord)
     while curCell.coord != goal:
         # closedList.append(curCell)
-        findNeighbors_backward(curCell, openList, goal, search, counter, path, blockedList, closedList, gValue)
+        findNeighbors_adaptive(curCell, openList, goal, search, counter, path, blockedList, closedList, gValue, hVal)
         curCell = BH.pop(openList)
         if(not curCell):
             return False
@@ -166,7 +169,7 @@ def findRoute_backward(goal, openList, closedList, search, counter, blockedList,
     # print('end find route -----------------')
     return path
     
-def findNeighbors_backward(curCell, openList, goal, search, counter, path, blockedList, closedList, gValue):
+def findNeighbors_adaptive(curCell, openList, goal, search, counter, path, blockedList, closedList, gValue, hVal):
     x = curCell.coord[0]
     y = curCell.coord[1]
     neighbors = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
@@ -181,22 +184,27 @@ def findNeighbors_backward(curCell, openList, goal, search, counter, path, block
                 search[coord] = counter
             if gValue[coord] > curCell.gValue + 1:
                 gValue[coord] = curCell.gValue + 1
-                fVal = gValue[coord] + hValue(coord, goal)
+                fVal = gValue[coord] + hVal[coord]
+                if gValue[goal] != float('inf'):
+                    hVal[coord] = gValue[goal] - gValue[coord]
                 newCell = Cell(coord, fVal, gValue[coord])
                 if newCell in openList:
                     openList.remove(newCell)
                     BH.sort(openList)
                 path[newCell.coord] = curCell
-                # path[curCell.coord] = newCell
                 # print('new cell is ', newCell.coord)
                 BH.insert(newCell, openList)
 
-def aStar_backward(goal, start, maze, blockedList):
+def aStar_adaptive(start, goal, maze, blockedList, hVal):
     counter = 0
     search = np.zeros((num_rows, num_cols))
     startHValue = hValue(start, goal)
     startCell = Cell(start, startHValue, 0)
     gValue = np.zeros((num_rows, num_cols))
+    # hVal = np.zeros((num_rows, num_cols))
+    # for i in range(0, num_rows):
+    #     for j in range(0, num_cols):
+    #         hVal[i][j] = hValue((i,j), goal)
     while startCell.coord != goal:
         gValue[startCell.coord] = 0
         gValue[goal] = float('inf')
@@ -208,7 +216,7 @@ def aStar_backward(goal, start, maze, blockedList):
         closedList = []
         # print('closed list ',closedList )
         BH.insert(startCell, openList)
-        path = findRoute_backward(goal, openList, closedList, search, counter, blockedList, gValue)
+        path = findRoute_adaptive(goal, openList, closedList, search, counter, blockedList, gValue, hVal)
         # expandedCells = expandedCells + len(closedList)
         # print(expandedCells)
         if not path:
@@ -216,32 +224,25 @@ def aStar_backward(goal, start, maze, blockedList):
             return False
         pathList = []
         currCoord = goal
-        print('Calculated backward path is', end='')
-        while currCoord != start:
-            print( currCoord, '->', end='')
+        # print('Calculated forward path is ', end='')
+        while currCoord != startCell.coord:
+            # print(currCoord, '->', end='')
             pathList.append(currCoord)
             currCoord = path[currCoord].coord
         # pathList.append(start)
-        print(start)
-        # print('end printing path from goal to start')
         # print(startCell.coord, end='')
-        # pathList.reverse()
-        # print(pathList)
-        for i in range(0, len(pathList)):
-            coord = pathList[i]
+        pathList.reverse()
+        for coord in pathList:
             if maze[coord] == 0:
                 blockedList.append(coord)
-                if i==0:
-                    goal = pathList[0]
-                else:
-                    goal = pathList[i-1]
+                startCell = path[coord]
                 # maze[coord] = 3
-                # print('new goal cell is ', goal)
+                # print('start cell is ', startCell.coord)
                 break
             else:
                 maze[coord] = 3
                 # print('->',coord, end='')
-                goal = start
+                startCell.coord = goal
         # print(goal, '->', end='')
         # curCell = path[goal]
         # while curCell.coord != start:
@@ -250,14 +251,16 @@ def aStar_backward(goal, start, maze, blockedList):
         # print(start)
         # startCell.coord = goal
         # print('start coord now is ', startCell.coord)
-
 def main():
-    # initialize 
-    maze = MG.generateMaze(num_rows, num_cols)
-    start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-    print("startpoint is ", start)
-    goal = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-    print("goalpoint is ", goal)
+    # initialize
+    forward_list = []
+    adaptive_list = [] 
+    for i in range(0, 5):
+        maze = MG.generateMaze(num_rows, num_cols)
+        start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
+        print("startpoint is ", start)
+        goal = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
+        print("goalpoint is ", goal)
 
     # maze = np.ones((num_rows, num_cols))
     # maze[(1,2)] = 0
@@ -268,74 +271,84 @@ def main():
     # maze[(4,3)] = 0
     # start = (4, 2)
     # goal = (4, 4)
-    if maze[start[0]][start[1]] == 0 or maze[goal[0]][goal[1]] == 0:
-        print("there is no path from startpoint to goal")
-        return
-    elif start == goal:
-        print("start point is the same as goal")
-        return
-    blockedList = []
+        if maze[start[0]][start[1]] == 0 or maze[goal[0]][goal[1]] == 0:
+            print("there is no path from startpoint to goal")
+            # return False
+            continue
+        elif start == goal:
+            print("start point is the same as goal")
+            # return False
+            continue
+        blockedList = []
     # expandedCells_For = 0
     # expandedCells_back = 0
-    start1 = time.time()
-    aStar_forward(start, goal, maze, blockedList)
-    end1 = time.time()
-    maze[start] = 2
-    maze[goal] = 4
-    print('')
-    for l in range(0, num_rows+2):
-        print('w', end='')
-    print('')
-    for i in range(0, num_rows):
-        print('w', end='')
-        for j in range(0, num_cols):
-            if(maze[(i,j)])==0:
-                print('x', end='')
-            elif (maze[(i,j)]) == 1:
-                print(' ', end='')
-            elif (maze[(i, j)]) == 2:
-                print('s', end='')
-            elif (maze[(i, j)]) == 3:
-                print('p', end='')
-                maze[(i, j)] = 1
-            else:
-                print('t', end='')
-        print('w')
-    for l in range(0, num_rows+2):
-        print('w', end='')
-    print('')
-
-    blockedList = []
-    start2 = time.time()
-    aStar_backward(start, goal, maze, blockedList)
-    end2 = time.time()
+        start1 = time.time()
+        aStar_forward(start, goal, maze, blockedList)
+        # print(findPath)
+        end1 = time.time()
+        # print('find path')
+    # maze[start] = 2
+    # maze[goal] = 4
+    # print('')
+    # for l in range(0, num_rows+2):
+    #     print('w', end='')
+    # print('')
+    # for i in range(0, num_rows):
+    #     print('w', end='')
+    #     for j in range(0, num_cols):
+    #         if(maze[(i,j)])==0:
+    #             print('x', end='')
+    #         elif (maze[(i,j)]) == 1:
+    #             print(' ', end='')
+    #         elif (maze[(i, j)]) == 2:
+    #             print('s', end='')
+    #         elif (maze[(i, j)]) == 3:
+    #             print('p', end='')
+    #             maze[(i, j)] = 1
+    #         else:
+    #             print('t', end='')
+    #     print('w')
+    # for l in range(0, num_rows+2):
+    #     print('w', end='')
+    # print('')
+        blockedList = []
+        hVal = np.zeros((num_rows, num_cols))
+        for i in range(0, num_rows):
+            for j in range(0, num_cols):
+                hVal[i][j] = hValue((i,j), goal)
+        start2 = time.time()
+        aStar_adaptive(start, goal, maze, blockedList, hVal)
+        end2 = time.time()
     
-    maze[start] = 2
-    maze[goal] = 4
-    print('')
-    for l in range(0, num_rows+2):
-        print('w', end='')
-    print('')
-    for i in range(0, num_rows):
-        print('w', end='')
-        for j in range(0, num_cols):
-            if(maze[(i,j)])==0:
-                print('x', end='')
-            elif (maze[(i,j)]) == 1:
-                print(' ', end='')
-            elif (maze[(i, j)]) == 2:
-                print('s', end='')
-            elif (maze[(i, j)]) == 3:
-                print('p', end='')
-            else:
-                print('t', end='')
-        print('w')
-    for l in range(0, num_rows+2):
-        print('w', end='')
-    print('')
-
-    runtime1 = end1 - start1
-    runtime2 = end2 - start2
-    print("runtime for forward: {}, runtime for backward:{}".format(runtime1, runtime2))
-
+    # maze[start] = 2
+    # maze[goal] = 4
+    # print('')
+    # for l in range(0, num_rows+2):
+    #     print('w', end='')
+    # print('')
+    # for i in range(0, num_rows):
+    #     print('w', end='')
+    #     for j in range(0, num_cols):
+    #         if(maze[(i,j)])==0:
+    #             print('x', end='')
+    #         elif (maze[(i,j)]) == 1:
+    #             print(' ', end='')
+    #         elif (maze[(i, j)]) == 2:
+    #             print('s', end='')
+    #         elif (maze[(i, j)]) == 3:
+    #             print('p', end='')
+    #         else:
+    #             print('t', end='')
+    #     print('w')
+    # for l in range(0, num_rows+2):
+    #     print('w', end='')
+    # print('')
+        runtime1 = end1 - start1
+        runtime2 = end2 - start2
+        forward_list.append(runtime1)
+        adaptive_list.append(runtime2)
+        print("runtime for forward: {}, runtime for adaptive:{}".format(runtime1, runtime2))
+    print(forward_list)
+    print(adaptive_list)
+   
 main()
