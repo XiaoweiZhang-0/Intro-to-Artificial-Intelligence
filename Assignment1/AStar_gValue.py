@@ -4,6 +4,7 @@ import numpy as np
 import BinHeap_large as BH_l
 import BinHeap_small as BH_s
 import time
+import matplotlib.pyplot as plt
 
 # 
 # OpenList：list with binary heap
@@ -243,7 +244,13 @@ def aStar_gl(start, goal, maze, blockedList):
         # print('start coord now is ', startCell.coord)
 
 def main():
+    # initialize
     # initialize 
+    # case = []
+    # gs_list = []
+    # gl_list = [] 
+    # caseNum = 0
+    # while caseNum < 50:
     maze = MG.generateMaze(num_rows, num_cols)
     start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
     print("startpoint is ", start)
@@ -327,6 +334,15 @@ def main():
 
     runtime1 = endTime1 - startTime1
     runtime2 = endTime2 - startTime2
+        # gs_list.append(runtime1)
+        # gl_list.append(runtime2)
+        # if runtime1:
+        #     case.append(caseNum)
+        # caseNum = caseNum + 1
     print("runtime in favor of smaller g-values: {}, runtime in favor of larger g-values: {}".format(runtime1, runtime2))
-
+    # plt.plot(case, gs_list, color="r")
+    # plt.plot(case, gl_list, color="b")
+    # print(gs_list)
+    # print(gl_list)
+    # plt.show()
 main()
