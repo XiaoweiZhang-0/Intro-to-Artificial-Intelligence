@@ -1,4 +1,4 @@
-# insert function for breaking ties with smaller g-value
+# insert function for breaking ties with larger g-value
 def insert(cell, openList):
     openList.append(cell)
     size = len(openList)
