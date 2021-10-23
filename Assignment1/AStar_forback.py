@@ -115,7 +115,7 @@ def aStar_forward(start, goal, maze, blockedList):
         # expandedCells = expandedCells + len(closedList)
         # print(expandedCells)
         if not path:
-            # print("There is no path from startpoint to goal")
+            print("There is no path from startpoint to goal")
             return False
         pathList = []
         currCoord = goal
@@ -213,7 +213,7 @@ def aStar_backward(goal, start, maze, blockedList):
         # expandedCells = expandedCells + len(closedList)
         # print(expandedCells)
         if not path:
-            # print("There is no path from startpoint to goal")
+            print("There is no path from startpoint to goal")
             return False
         pathList = []
         currCoord = goal
@@ -254,16 +254,16 @@ def aStar_backward(goal, start, maze, blockedList):
 
 def main():
     # initialize 
-    case = []
-    forward_list = []
-    backward_list = [] 
-    caseNum = 0
-    while caseNum < 5:
-        maze = MG.generateMaze(num_rows, num_cols)
-        start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-        # print("startpoint is ", start)
-        goal = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-        # print("goalpoint is ", goal)
+    # case = []
+    # forward_list = []
+    # backward_list = [] 
+    # caseNum = 0
+    # while caseNum < 50:
+    maze = MG.generateMaze(num_rows, num_cols)
+    start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
+    print("startpoint is ", start)
+    goal = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
+    print("goalpoint is ", goal)
 
     # maze = np.ones((num_rows, num_cols))
     # maze[(1,2)] = 0
@@ -274,83 +274,82 @@ def main():
     # maze[(4,3)] = 0
     # start = (4, 2)
     # goal = (4, 4)
-        if maze[start[0]][start[1]] == 0 or maze[goal[0]][goal[1]] == 0:
-            # print("there is no path from startpoint to goal")
-            # return
-            continue
-        elif start == goal:
-            # print("start point is the same as goal")
-            # return
-            continue
-        blockedList = []
+    if maze[start[0]][start[1]] == 0 or maze[goal[0]][goal[1]] == 0:
+        print("there is no path from startpoint to goal")
+        return
+    elif start == goal:
+        print("start point is the same as goal")
+        return
+    
+    blockedList = []
         # expandedCells_For = 0
         # expandedCells_back = 0
-        start1 = time.time()
-        aStar_forward(start, goal, maze, blockedList)
-        end1 = time.time()
-    # maze[start] = 2
-    # maze[goal] = 4
-    # print('')
-    # for l in range(0, num_rows+2):
-    #     print('w', end='')
-    # print('')
-    # for i in range(0, num_rows):
-    #     print('w', end='')
-    #     for j in range(0, num_cols):
-    #         if(maze[(i,j)])==0:
-    #             print('x', end='')
-    #         elif (maze[(i,j)]) == 1:
-    #             print(' ', end='')
-    #         elif (maze[(i, j)]) == 2:
-    #             print('s', end='')
-    #         elif (maze[(i, j)]) == 3:
-    #             print('p', end='')
-    #             maze[(i, j)] = 1
-    #         else:
-    #             print('t', end='')
-    #     print('w')
-    # for l in range(0, num_rows+2):
-    #     print('w', end='')
-    # print('')
+    start1 = time.time()
+    aStar_forward(start, goal, maze, blockedList)
+    end1 = time.time()
+    maze[start] = 2
+    maze[goal] = 4
+    print('')
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
+    for i in range(0, num_rows):
+        print('w', end='')
+        for j in range(0, num_cols):
+            if(maze[(i,j)])==0:
+                print('x', end='')
+            elif (maze[(i,j)]) == 1:
+                print(' ', end='')
+            elif (maze[(i, j)]) == 2:
+                print('s', end='')
+            elif (maze[(i, j)]) == 3:
+                print('p', end='')
+                maze[(i, j)] = 1
+            else:
+                print('t', end='')
+        print('w')
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
 
-        blockedList = []
-        start2 = time.time()
-        aStar_backward(start, goal, maze, blockedList)
-        end2 = time.time()
+    blockedList = []
+    start2 = time.time()
+    aStar_backward(start, goal, maze, blockedList)
+    end2 = time.time()
     
-    # maze[start] = 2
-    # maze[goal] = 4
-    # print('')
-    # for l in range(0, num_rows+2):
-    #     print('w', end='')
-    # print('')
-    # for i in range(0, num_rows):
-    #     print('w', end='')
-    #     for j in range(0, num_cols):
-    #         if(maze[(i,j)])==0:
-    #             print('x', end='')
-    #         elif (maze[(i,j)]) == 1:
-    #             print(' ', end='')
-    #         elif (maze[(i, j)]) == 2:
-    #             print('s', end='')
-    #         elif (maze[(i, j)]) == 3:
-    #             print('p', end='')
-    #         else:
-    #             print('t', end='')
-    #     print('w')
-    # for l in range(0, num_rows+2):
-    #     print('w', end='')
-    # print('')
-        runtime1 = end1 - start1
-        runtime2 = end2 - start2
-        forward_list.append(runtime1)
-        backward_list.append(runtime2)
-        if runtime1:
-            case.append(caseNum)
-        caseNum = caseNum + 1
-    # print("runtime for forward: {}, runtime for backward:{}".format(runtime1, runtime2))
-    plt.plot(case, forward_list)
-    plt.plot(case, backward_list)
-    plt.show()
+    maze[start] = 2
+    maze[goal] = 4
+    print('')
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
+    for i in range(0, num_rows):
+        print('w', end='')
+        for j in range(0, num_cols):
+            if(maze[(i,j)])==0:
+                print('x', end='')
+            elif (maze[(i,j)]) == 1:
+                print(' ', end='')
+            elif (maze[(i, j)]) == 2:
+                print('s', end='')
+            elif (maze[(i, j)]) == 3:
+                print('p', end='')
+            else:
+                print('t', end='')
+        print('w')
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
+    runtime1 = end1 - start1
+    runtime2 = end2 - start2
+    #     forward_list.append(runtime1)
+    #     backward_list.append(runtime2)
+    #     if runtime1:
+    #         case.append(caseNum)
+    #     caseNum = caseNum + 1
+    print("runtime for forward: {}, runtime for backward:{}".format(runtime1, runtime2))
+    # plt.plot(case, forward_list, 'r')
+    # plt.plot(case, backward_list, 'b')
+    # plt.show()
     
 main()

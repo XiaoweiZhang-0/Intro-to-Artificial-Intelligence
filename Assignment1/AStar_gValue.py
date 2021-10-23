@@ -265,16 +265,40 @@ def main():
     elif start == goal:
         print("start point is the same as goal")
         return
+
     blockedList = []
     # expandedCells_For = 0
     # expandedCells_back = 0
     startTime1 = time.time()
     aStar_gs(start, goal, maze, blockedList)
     endTime1 = time.time()
-    
+    maze[start] = 2
+    maze[goal] = 4
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
+    for i in range(0, num_rows):
+        print('w', end='')
+        for j in range(0, num_cols):
+            if(maze[(i,j)])==0:
+                print('x', end='')
+            elif (maze[(i,j)]) == 1:
+                print(' ', end='')
+            elif (maze[(i, j)]) == 2:
+                print('s', end='')
+            elif (maze[(i, j)]) == 3:
+                print('p', end='')
+                maze[(i, j)] = 1
+            else:
+                print('t', end='')
+        print('w')
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
+
     blockedList = []
     startTime2 = time.time()
-    aStar_gl(goal, start, maze, blockedList)
+    aStar_gl(start, goal, maze, blockedList)
     endTime2 = time.time()
     
     maze[start] = 2

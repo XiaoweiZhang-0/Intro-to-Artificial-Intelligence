@@ -118,7 +118,7 @@ def aStar_forward(start, goal, maze, blockedList):
         # expandedCells = expandedCells + len(closedList)
         # print(expandedCells)
         if not path:
-            # print("There is no path from startpoint to goal")
+            print("There is no path from startpoint to goal")
             return False
         pathList = []
         currCoord = goal
@@ -221,7 +221,7 @@ def aStar_adaptive(start, goal, maze, blockedList, hVal):
         # expandedCells = expandedCells + len(closedList)
         # print(expandedCells)
         if not path:
-            # print("There is no path from startpoint to goal")
+            print("There is no path from startpoint to goal")
             return False
         pathList = []
         currCoord = goal
@@ -254,16 +254,16 @@ def aStar_adaptive(start, goal, maze, blockedList, hVal):
         # print('start coord now is ', startCell.coord)
 def main():
     # initialize
-    case = []
-    forward_list = []
-    adaptive_list = [] 
-    caseNum = 0
-    while caseNum < 5:
-        maze = MG.generateMaze(num_rows, num_cols)
-        start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-        # print("startpoint is ", start)
-        goal = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
-        # print("goalpoint is ", goal)
+    # case = []
+    # forward_list = []
+    # adaptive_list = [] 
+    # caseNum = 0
+    # while caseNum < 5:
+    maze = MG.generateMaze(num_rows, num_cols)
+    start = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
+    print("startpoint is ", start)
+    goal = (random.randint(0, num_rows-1), random.randint(0, num_cols-1))
+    print("goalpoint is ", goal)
 
     # maze = np.ones((num_rows, num_cols))
     # maze[(1,2)] = 0
@@ -274,91 +274,89 @@ def main():
     # maze[(4,3)] = 0
     # start = (4, 2)
     # goal = (4, 4)
-        if maze[start[0]][start[1]] == 0 or maze[goal[0]][goal[1]] == 0:
-            # print("there is no path from startpoint to goal")
-            # return False
-            continue
-        elif start == goal:
-            # print("start point is the same as goal")
-            # return False
-            continue
-        blockedList = []
+    if maze[start[0]][start[1]] == 0 or maze[goal[0]][goal[1]] == 0:
+        print("there is no path from startpoint to goal")
+        return False
+    elif start == goal:
+        print("start point is the same as goal")
+        return False
+
+    blockedList = []
     # expandedCells_For = 0
     # expandedCells_back = 0
-        start1 = time.time()
-        aStar_forward(start, goal, maze, blockedList)
-        # print(findPath)
-        end1 = time.time()
-        # print('find path')
-    # maze[start] = 2
-    # maze[goal] = 4
-    # print('')
-    # for l in range(0, num_rows+2):
-    #     print('w', end='')
-    # print('')
-    # for i in range(0, num_rows):
-    #     print('w', end='')
-    #     for j in range(0, num_cols):
-    #         if(maze[(i,j)])==0:
-    #             print('x', end='')
-    #         elif (maze[(i,j)]) == 1:
-    #             print(' ', end='')
-    #         elif (maze[(i, j)]) == 2:
-    #             print('s', end='')
-    #         elif (maze[(i, j)]) == 3:
-    #             print('p', end='')
-    #             maze[(i, j)] = 1
-    #         else:
-    #             print('t', end='')
-    #     print('w')
-    # for l in range(0, num_rows+2):
-    #     print('w', end='')
-    # print('')
-        blockedList = []
-        hVal = np.zeros((num_rows, num_cols))
-        for i in range(0, num_rows):
-            for j in range(0, num_cols):
-                hVal[i][j] = hValue((i,j), goal)
-        start2 = time.time()
-        aStar_adaptive(start, goal, maze, blockedList, hVal)
-        end2 = time.time()
-    
-    # maze[start] = 2
-    # maze[goal] = 4
-    # print('')
-    # for l in range(0, num_rows+2):
-    #     print('w', end='')
-    # print('')
-    # for i in range(0, num_rows):
-    #     print('w', end='')
-    #     for j in range(0, num_cols):
-    #         if(maze[(i,j)])==0:
-    #             print('x', end='')
-    #         elif (maze[(i,j)]) == 1:
-    #             print(' ', end='')
-    #         elif (maze[(i, j)]) == 2:
-    #             print('s', end='')
-    #         elif (maze[(i, j)]) == 3:
-    #             print('p', end='')
-    #         else:
-    #             print('t', end='')
-    #     print('w')
-    # for l in range(0, num_rows+2):
-    #     print('w', end='')
-    # print('')
-        runtime1 = end1 - start1
-        runtime2 = end2 - start2
-        forward_list.append(runtime1)
-        adaptive_list.append(runtime2)
-        if runtime1:
-            case.append(caseNum)
-        caseNum = caseNum + 1
-        # print("runtime for forward: {}, runtime for adaptive:{}".format(runtime1, runtime2))
+    start1 = time.time()
+    aStar_forward(start, goal, maze, blockedList)
+    end1 = time.time()
+    maze[start] = 2
+    maze[goal] = 4
+    print('')
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
+    for i in range(0, num_rows):
+        print('w', end='')
+        for j in range(0, num_cols):
+            if(maze[(i,j)])==0:
+                print('x', end='')
+            elif (maze[(i,j)]) == 1:
+                print(' ', end='')
+            elif (maze[(i, j)]) == 2:
+                print('s', end='')
+            elif (maze[(i, j)]) == 3:
+                print('p', end='')
+                maze[(i, j)] = 1
+            else:
+                print('t', end='')
+        print('w')
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
+        
+    blockedList = []
+    hVal = np.zeros((num_rows, num_cols))
+    for i in range(0, num_rows):
+        for j in range(0, num_cols):
+            hVal[i][j] = hValue((i,j), goal)
+    start2 = time.time()
+    aStar_adaptive(start, goal, maze, blockedList, hVal)
+    end2 = time.time()
+    maze[start] = 2
+    maze[goal] = 4
+    print('')
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
+    for i in range(0, num_rows):
+        print('w', end='')
+        for j in range(0, num_cols):
+            if(maze[(i,j)])==0:
+                print('x', end='')
+            elif (maze[(i,j)]) == 1:
+                print(' ', end='')
+            elif (maze[(i, j)]) == 2:
+                print('s', end='')
+            elif (maze[(i, j)]) == 3:
+                print('p', end='')
+            else:
+                print('t', end='')
+        print('w')
+    for l in range(0, num_rows+2):
+        print('w', end='')
+    print('')
+    runtime1 = end1 - start1
+    runtime2 = end2 - start2
+        # forward_list.append(runtime1)
+        # adaptive_list.append(runtime2)
+        # if runtime1:
+        #     case.append(caseNum)
+        # caseNum = caseNum + 1
+    print("runtime for forward: {}, runtime for adaptive:{}".format(runtime1, runtime2))
+    # print("expanded cells for forward: {}, expanded cells for adaptive:{}".format(cnt_path1, cnt_path2))
     # print(forward_list)
     # print(adaptive_list)
     # print(case)
-    plt.plot(case, forward_list)
-    plt.plot(case, adaptive_list)
-    plt.show()
+    # plt.plot(case, forward_list)
+    # plt.plot(case, adaptive_list)
+    # plt.show()
 
 main()
