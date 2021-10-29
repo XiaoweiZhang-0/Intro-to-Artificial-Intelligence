@@ -90,6 +90,9 @@ def pop(openList):
 # for cell in openList:
 #     print(cell.coord)
 # print("------------------")
+# for i in range(0, len(openList)):
+#     print(pop(openList).coord)
+
 
 # print(pop(openList).coord)
 # print("------------------")
