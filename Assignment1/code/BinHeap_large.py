@@ -30,7 +30,7 @@ def sort(openList):
                 if openList[left].fValue < openList[right].fValue:
                     smallerChild = left
                 elif openList[left].fValue == openList[right].fValue:
-                    if openList[left].gValue <= openList[right].gValue:
+                    if openList[left].gValue >= openList[right].gValue:
                         smallerChild = left
                     else:
                         smallerChild = right
