@@ -1,3 +1,9 @@
+# class Cell:
+#     def __init__(self, coord, fValue, gValue):
+#         self.coord = coord
+#         self.fValue = fValue
+#         self.gValue = gValue
+
 # insert function for breaking ties with larger g-value
 def insert(cell, openList):
     openList.append(cell)
@@ -62,3 +68,24 @@ def pop(openList):
     if size > 2:
         sort(openList)
     return minCell
+
+# cell1 = Cell((2,1), 2, 0)
+# cell2 = Cell((2,5), 1, 0)
+# cell3 = Cell((4,5), 1, 5)
+# cell4 = Cell((4,7), 5, 2)
+# cell6 = Cell((3,7), 3, 2)
+# cell5 = Cell((3,4), 3, 3)
+
+# openList = []
+# insert(cell1, openList)
+# insert(cell2, openList)
+# insert(cell3, openList)
+# insert(cell4, openList)
+# insert(cell5, openList)
+# insert(cell6, openList)
+
+# for cell in openList:
+#     print(cell.coord)
+# print("------------------")
+# for i in range(0, len(openList)):
+#     print(pop(openList).coord)
