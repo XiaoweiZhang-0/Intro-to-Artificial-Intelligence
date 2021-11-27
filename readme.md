@@ -1,10 +1,10 @@
-# ### Project Description
+### Project Description
 
 ```
 This is the repository for CS440 FA21 with professor Boularias Abdeslam
 ```
 
-# ### Assignment 1
+# Assignment 1
 
 ```
 What I have done:
