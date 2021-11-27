@@ -1,11 +1,11 @@
-# Project Description
+### Project Description
 
 ```
 This is the repository for CS440 FA21 with professor Boularias Abdeslam
 ```
 
-# Assignment 1
-
+### Assignment 1
+Overview: This assignment is to implement A* algorithm in a maze and compare the effect of varieted factors on run time
 ```
 What I have done:
 1.Implemented a maze generator to randomly generate a maze of given size with 30% block rate using DFS algorithm
