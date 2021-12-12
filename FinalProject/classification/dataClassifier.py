@@ -9,6 +9,7 @@
 # This file contains feature extraction methods and harness 
 # code for data classification
 
+
 import mostFrequent
 import naiveBayes
 import perceptron
@@ -16,6 +17,8 @@ import mira
 import samples
 import sys
 import util
+import DecisionTree
+import numpy as np
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH=28
@@ -167,7 +170,7 @@ def readCommand( argv ):
   from optparse import OptionParser  
   parser = OptionParser(USAGE_STRING)
   
-  parser.add_option('-c', '--classifier', help=default('The type of classifier'), choices=['mostFrequent', 'nb', 'naiveBayes', 'perceptron', 'mira', 'minicontest'], default='mostFrequent')
+  parser.add_option('-c', '--classifier', help=default('The type of classifier'), choices=['mostFrequent', 'nb', 'naiveBayes', 'perceptron', 'mira', 'minicontest', 'decisiontree'], default='mostFrequent')
   parser.add_option('-d', '--data', help=default('Dataset to use'), choices=['digits', 'faces'], default='digits')
   parser.add_option('-t', '--training', help=default('The size of the training set'), default=100, type="int")
   parser.add_option('-f', '--features', help=default('Whether to use enhanced features'), default=False, action="store_true")
@@ -203,7 +206,7 @@ def readCommand( argv ):
     if (options.classifier == 'minicontest'):
       featureFunction = contestFeatureExtractorDigit
   elif(options.data=="faces"):
-    print(Image = Imageprinter(FACE_DATUM_WIDTH, FACE_DATUM_HEIGHT).printImage)
+    printImage = Imageprinter(FACE_DATUM_WIDTH, FACE_DATUM_HEIGHT).printImage
     if (options.features):
       featureFunction = enhancedFeatureExtractorFace
     else:
@@ -256,6 +259,8 @@ def readCommand( argv ):
   elif(options.classifier == 'minicontest'):
     import minicontest
     classifier = minicontest.contestClassifier(legalLabels)
+  elif(options.classifier == 'decisiontree'):
+    classifier = "Decision Tree"
   else:
     print( "Unknown classifier:", options.classifier)
     print( USAGE_STRING)
@@ -289,11 +294,11 @@ def runClassifier(args, options):
   featureFunction = args['featureFunction']
   classifier = args['classifier']
   printImage = args['printImage']
-      
+  # print("=============feature function is ", featureFunction)
   # Load data  
   numTraining = options.training
   numTest = options.test
-  assert(numTest == numTraining)
+  # assert(numTest == numTraining)
 
   if(options.data=="faces"):
     rawTrainingData = samples.loadDataFile("facedata/facedatatrain", numTraining,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
@@ -320,7 +325,66 @@ def runClassifier(args, options):
   
   # Conduct training and testing
   print( "Training...")
-  classifier.train(trainingData, trainingLabels, validationData, validationLabels)
+  if(classifier == "Decision Tree"):
+    # print(trainingLabels)
+    if(options.data=="faces"):
+      d1 = FACE_DATUM_WIDTH
+      d2 = FACE_DATUM_HEIGHT
+    else:
+      d1 = DIGIT_DATUM_WIDTH
+      d2 = DIGIT_DATUM_HEIGHT
+    trainlist = list(trainingData)
+    # print(type(trainlist[0]))
+    valist = list(validationData)
+    testlist = list(testData)
+    # print(testlist)
+    N = len(trainlist)
+    # d = len(trainlist[0])
+    # print(d)
+    datatrain = []
+    for x in range(N):
+      temp = []
+      for y in range(0, d1):
+        for z in range(0, d2):
+          # print(trainlist[x].get((y,z)))
+          temp.append(trainlist[x].get((y,z)))
+      datatrain.append((temp, trainingLabels[x]))
+      # datatrain[x][1] = trainingLabels[x]
+    M = len(valist)
+    dataval = []
+    for i in range(M):
+      temp = []
+      for j in range(0, d1):
+        for k in range(0, d2):
+          # print(valist[x].get((y,z)))
+          temp.append(valist[i].get((j,k)))
+      # print(temp)
+      dataval.append((temp, validationLabels[i]))
+
+
+    # M = len()
+    # for i in range()
+    # print("training data is ", list(trainingData))
+    
+    # tree_best, acc_best = DecisionTree.tune_tree(data_train=datatrain, data_val=dataval, verbose=True)
+    S = len(testlist)
+    datatest = []
+    for c in range(S):
+      temp = []
+      for b in range(0, d1):
+        for a in range(0, d2):
+          # print(valist[x].get((y,z)))
+          temp.append(valist[c].get((b,a)))
+      datatest.append((temp, testLabels[c]))
+    tree_best, acc_best = DecisionTree.tune_tree(data_train=datatrain, data_val=datatest, verbose=True)
+    # guesses = tree_best.predict_all(datatest)
+    # print(guesses)
+    # print(testLabels)
+    # correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
+    # print( str(correct), ("correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels)))
+    return True
+  else:
+    classifier.train(trainingData, trainingLabels, validationData, validationLabels)
   print( "Validating...")
   # print("========validation data is ", list(validationData))
   guesses = classifier.classify(validationData)

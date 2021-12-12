@@ -185,6 +185,7 @@ def convertToInteger(data):
   for i in range(row):
     for j in range(col):
       data[i][j] = IntegerConversionFunction(data[i][j])
+  # print(data)
   return data
 
 # Testing
