@@ -49,7 +49,12 @@ class PerceptronClassifier:
       print ("Starting iteration ", iteration, "...")
       for i in range(len(trainingData)):
           "*** YOUR CODE HERE ***"
-          util.raiseNotDefined()
+          exactAnswer = trainingLabels[i]
+          guessAnswer = self.classify([trainingData[i]])[0]
+          if exactAnswer != guessAnswer:    
+            # update the weights
+            self.weights[exactAnswer] = self.weights[exactAnswer] + trainingData[i] # wi <- wi + phi
+            self.weights[guessAnswer]  = self.weights[guessAnswer]  - trainingData[i] # wi <- wi - phi
     
   def classify(self, data ):
     """
