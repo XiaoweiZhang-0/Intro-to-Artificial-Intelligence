@@ -170,7 +170,12 @@ class Counter(dict):
     all = self.items()
     values = [x[1] for x in all]
     maxIndex = values.index(max(values))
-    return all[maxIndex][0]
+    # print(max(values))
+    # print("self is ", self)
+    list1 = list(self)
+    key = list1[maxIndex]
+    # print(key)
+    return key
   
   def sortedKeys(self):
     """
@@ -423,6 +428,7 @@ def arrayInvert(array):
   Inverts a matrix stored as a list of lists.
   """
   result = [[] for i in array]
+  print("result is ", result)
   for outer in array:
     for inner in range(len(outer)):
       result[inner].append(outer[inner])

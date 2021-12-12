@@ -7,6 +7,7 @@
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
 
 import util
+import numpy as np
 
 ## Constants
 DATUM_WIDTH = 0 # in pixels
@@ -59,13 +60,17 @@ class Datum:
     self.height = DATUM_HEIGHT
     self.width = DATUM_WIDTH
     if data == None:
+          # data = [' '] * (DATUM_HEIGHT, DATUM_WIDTH)
       data = [[' ' for i in range(DATUM_WIDTH)] for j in range(DATUM_HEIGHT)] 
+    print("result", convertToInteger(data))
     self.pixels = util.arrayInvert(convertToInteger(data)) 
-    
+    print("pixels shape is", self.pixels)
   def getPixel(self, column, row):
     """
     Returns the value of the pixel at column, row as 0, or 1.
     """
+    print("height", self.height)
+    print("width", self.width)
     return self.pixels[column][row]
       
   def getPixels(self):
