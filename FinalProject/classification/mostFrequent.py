@@ -27,9 +27,12 @@ class MostFrequentClassifier(classificationMethod.ClassificationMethod):
     counter.incrementAll(labels, 1)
     # print("argMax is ", counter.argMax())
     self.guess = counter.argMax()
+    # print("guess is ", self.guess)
   
   def classify(self, testData):
     """
     Classify all test data as the most common label.
     """
+    # print("=============test data is", list(testData))
+    # print("---------------validation is ", [self.guess for i in testData])
     return [self.guess for i in testData]

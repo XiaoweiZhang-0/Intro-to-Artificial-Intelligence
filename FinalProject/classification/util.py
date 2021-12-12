@@ -428,7 +428,7 @@ def arrayInvert(array):
   Inverts a matrix stored as a list of lists.
   """
   result = [[] for i in array]
-  print("result is ", result)
+  # print("result is ", result)
   for outer in array:
     for inner in range(len(outer)):
       result[inner].append(outer[inner])
@@ -469,7 +469,7 @@ def pause():
   Pauses the output stream awaiting user feedback.
   """
   print ("<Press enter/return to continue>")
-  raw_input()
+  # raw_input()
   
   
 ## code to handle timeouts

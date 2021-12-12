@@ -59,18 +59,21 @@ class Datum:
     DATUM_WIDTH=width
     self.height = DATUM_HEIGHT
     self.width = DATUM_WIDTH
+    # print("Datum Height is ", DATUM_HEIGHT)
+    # print("Datum Width is ", DATUM_WIDTH)
     if data == None:
           # data = [' '] * (DATUM_HEIGHT, DATUM_WIDTH)
       data = [[' ' for i in range(DATUM_WIDTH)] for j in range(DATUM_HEIGHT)] 
-    print("result", convertToInteger(data))
+    # print("data", data)
     self.pixels = util.arrayInvert(convertToInteger(data)) 
-    print("pixels shape is", self.pixels)
+    # self.pixels = data
+    # print("pixels shape is", self.pixels)
   def getPixel(self, column, row):
     """
     Returns the value of the pixel at column, row as 0, or 1.
     """
-    print("height", self.height)
-    print("width", self.width)
+    # print("height", self.height)
+    # print("width", self.width)
     return self.pixels[column][row]
       
   def getPixels(self):
@@ -167,10 +170,22 @@ def convertToInteger(data):
   """
   Helper function for file reading.
   """
-  if type(data) != type([]):
-    return IntegerConversionFunction(data)
-  else:
-    return map(convertToInteger, data)
+  # print("data row is ", len(data))
+  # print("data column is ", len(data[0]))
+  # print("=========data type is ", type(data), type([]))
+  # if type(data) != type([]):
+  #   print("====================get in==========")
+  #   return IntegerConversionFunction(data)
+
+  # else:
+  #   # print("data is \n", data)
+  #   return map(convertToInteger, data)
+  row = len(data)
+  col = len(data[0])
+  for i in range(row):
+    for j in range(col):
+      data[i][j] = IntegerConversionFunction(data[i][j])
+  return data
 
 # Testing
 

@@ -57,6 +57,7 @@ def basicFeatureExtractorFace(datum):
   return features
 
 def enhancedFeatureExtractorDigit(datum):
+  ## To do: Enhance Feature Digit
   """
   Your feature extraction playground.
   
@@ -82,6 +83,7 @@ def contestFeatureExtractorDigit(datum):
   return features
 
 def enhancedFeatureExtractorFace(datum):
+  ## To do: Enhance Feature Face
   """
   Your feature extraction playground for faces.
   It is your choice to modify this.
@@ -291,6 +293,7 @@ def runClassifier(args, options):
   # Load data  
   numTraining = options.training
   numTest = options.test
+  assert(numTest == numTraining)
 
   if(options.data=="faces"):
     rawTrainingData = samples.loadDataFile("facedata/facedatatrain", numTraining,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
@@ -312,12 +315,14 @@ def runClassifier(args, options):
   print( "Extracting features...")
   trainingData = map(featureFunction, rawTrainingData)
   validationData = map(featureFunction, rawValidationData)
+  # print("=========raw validation data", rawValidationData)
   testData = map(featureFunction, rawTestData)
   
   # Conduct training and testing
   print( "Training...")
   classifier.train(trainingData, trainingLabels, validationData, validationLabels)
   print( "Validating...")
+  # print("========validation data is ", list(validationData))
   guesses = classifier.classify(validationData)
   correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
   print( str(correct), ("correct out of " + str(len(validationLabels)) + " (%.1f%%).") % (100.0 * correct / len(validationLabels)))
