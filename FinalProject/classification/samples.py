@@ -59,6 +59,7 @@ class Datum:
     DATUM_WIDTH=width
     self.height = DATUM_HEIGHT
     self.width = DATUM_WIDTH
+    # self.data = data
     # print("Datum Height is ", DATUM_HEIGHT)
     # print("Datum Width is ", DATUM_WIDTH)
     if data == None:
@@ -95,6 +96,8 @@ class Datum:
     
   def __str__(self):
     return self.getAsciiString()
+  # def print(self):
+  #   return self.data
     
 
 
@@ -180,6 +183,7 @@ def convertToInteger(data):
   # else:
   #   # print("data is \n", data)
   #   return map(convertToInteger, data)
+  # print(type(data))
   row = len(data)
   col = len(data[0])
   for i in range(row):

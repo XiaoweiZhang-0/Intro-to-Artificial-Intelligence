@@ -19,6 +19,7 @@ import sys
 import util
 import DecisionTree
 import numpy as np
+import logreg
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH=28
@@ -121,6 +122,7 @@ def analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
       prediction = guesses[i]
       truth = testLabels[i]
       if (prediction != truth):
+        
           print("===================================")
           print("Mistake on example %d" % i) 
           print("Predicted %d; truth is %d" % (prediction, truth))
@@ -170,7 +172,7 @@ def readCommand( argv ):
   from optparse import OptionParser  
   parser = OptionParser(USAGE_STRING)
   
-  parser.add_option('-c', '--classifier', help=default('The type of classifier'), choices=['mostFrequent', 'nb', 'naiveBayes', 'perceptron', 'mira', 'minicontest', 'decisiontree'], default='mostFrequent')
+  parser.add_option('-c', '--classifier', help=default('The type of classifier'), choices=['mostFrequent', 'nb', 'naiveBayes', 'perceptron', 'mira', 'minicontest', 'logreg'], default='mostFrequent')
   parser.add_option('-d', '--data', help=default('Dataset to use'), choices=['digits', 'faces'], default='digits')
   parser.add_option('-t', '--training', help=default('The size of the training set'), default=100, type="int")
   parser.add_option('-f', '--features', help=default('Whether to use enhanced features'), default=False, action="store_true")
@@ -259,8 +261,9 @@ def readCommand( argv ):
   elif(options.classifier == 'minicontest'):
     import minicontest
     classifier = minicontest.contestClassifier(legalLabels)
-  elif(options.classifier == 'decisiontree'):
-    classifier = "Decision Tree"
+  elif(options.classifier == 'logreg'):
+    classifier = "logreg"
+    args["labels"] = legalLabels
   else:
     print( "Unknown classifier:", options.classifier)
     print( USAGE_STRING)
@@ -291,14 +294,15 @@ USAGE_STRING = """
 
 def runClassifier(args, options):
 
+  # print("open new file...")
+  f = open("result.txt", "w")
   featureFunction = args['featureFunction']
   classifier = args['classifier']
   printImage = args['printImage']
-  # print("=============feature function is ", featureFunction)
   # Load data  
   numTraining = options.training
   numTest = options.test
-  # assert(numTest == numTraining)
+
 
   if(options.data=="faces"):
     rawTrainingData = samples.loadDataFile("facedata/facedatatrain", numTraining,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
@@ -315,87 +319,36 @@ def runClassifier(args, options):
     rawTestData = samples.loadDataFile("digitdata/testimages", numTest,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT)
     testLabels = samples.loadLabelsFile("digitdata/testlabels", numTest)
     
-  
   # Extract features
   print( "Extracting features...")
   trainingData = map(featureFunction, rawTrainingData)
   validationData = map(featureFunction, rawValidationData)
-  # print("=========raw validation data", rawValidationData)
   testData = map(featureFunction, rawTestData)
-  
-  # Conduct training and testing
   print( "Training...")
-  if(classifier == "Decision Tree"):
-    # print(trainingLabels)
-    if(options.data=="faces"):
-      d1 = FACE_DATUM_WIDTH
-      d2 = FACE_DATUM_HEIGHT
-    else:
-      d1 = DIGIT_DATUM_WIDTH
-      d2 = DIGIT_DATUM_HEIGHT
-    trainlist = list(trainingData)
-    # print(type(trainlist[0]))
-    valist = list(validationData)
-    testlist = list(testData)
-    # print(testlist)
-    N = len(trainlist)
-    # d = len(trainlist[0])
-    # print(d)
-    datatrain = []
-    for x in range(N):
-      temp = []
-      for y in range(0, d1):
-        for z in range(0, d2):
-          # print(trainlist[x].get((y,z)))
-          temp.append(trainlist[x].get((y,z)))
-      datatrain.append((temp, trainingLabels[x]))
-      # datatrain[x][1] = trainingLabels[x]
-    M = len(valist)
-    dataval = []
-    for i in range(M):
-      temp = []
-      for j in range(0, d1):
-        for k in range(0, d2):
-          # print(valist[x].get((y,z)))
-          temp.append(valist[i].get((j,k)))
-      # print(temp)
-      dataval.append((temp, validationLabels[i]))
-
-
-    # M = len()
-    # for i in range()
-    # print("training data is ", list(trainingData))
-    
-    # tree_best, acc_best = DecisionTree.tune_tree(data_train=datatrain, data_val=dataval, verbose=True)
-    S = len(testlist)
-    datatest = []
-    for c in range(S):
-      temp = []
-      for b in range(0, d1):
-        for a in range(0, d2):
-          # print(valist[x].get((y,z)))
-          temp.append(valist[c].get((b,a)))
-      datatest.append((temp, testLabels[c]))
-    tree_best, acc_best = DecisionTree.tune_tree(data_train=datatrain, data_val=datatest, verbose=True)
-    # guesses = tree_best.predict_all(datatest)
-    # print(guesses)
-    # print(testLabels)
-    # correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
-    # print( str(correct), ("correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels)))
-    return True
+  if classifier == "logreg":
+    classifier = logreg.train_and_tune(trainingData, validationData, trainingLabels, validationLabels, args["labels"])
   else:
     classifier.train(trainingData, trainingLabels, validationData, validationLabels)
+  # print_string = '=========max_depth={:d}   min_split_size={:d}    #_d1_features={:d}     #_d2_features={:d}      acc_val {:.2f}'.format(max_depth_best, min_split_size_best, step1_best, step2_best, acc_val_best)
+  # f.write(print_string+"\n")
   print( "Validating...")
   # print("========validation data is ", list(validationData))
+  # print(list(validationData))
   guesses = classifier.classify(validationData)
+  # print(len(guesses))
   correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
   print( str(correct), ("correct out of " + str(len(validationLabels)) + " (%.1f%%).") % (100.0 * correct / len(validationLabels)))
   print( "Testing...")
+  # print("-----",len(list(testData)))
+  # print("-------", list(validationData)[0])
+  # print("-------",list(testData)[0])
   guesses = classifier.classify(testData)
   correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
   print( str(correct), ("correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels)))
+  # str = correct + "correct out of " + len(testLabels) + 100.0 * correct / len(testLabels)
+  f.write("test acc is "+str(correct)+(" correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels))+"\n")
+  f.close()
   analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
-  
   # do odds ratio computation if specified at command line
   if((options.odds) & (options.classifier == "naiveBayes" or (options.classifier == "nb")) ):
     label1, label2 = options.label1, options.label2
