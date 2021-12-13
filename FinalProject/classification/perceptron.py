@@ -41,7 +41,7 @@ class PerceptronClassifier:
     (and thus represents a vector a values).
     """
     
-    self.features = trainingData[0].keys() # could be useful later
+    # self.features = trainingData[0].keys() # could be useful later
     # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
     # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
     
@@ -53,8 +53,8 @@ class PerceptronClassifier:
           guessAnswer = self.classify([trainingData[i]])[0]
           if exactAnswer != guessAnswer:    
             # update the weights
-            self.weights[exactAnswer] = self.weights[exactAnswer] + trainingData[i] # wi <- wi + phi
-            self.weights[guessAnswer]  = self.weights[guessAnswer]  - trainingData[i] # wi <- wi - phi
+            self.weights[exactAnswer] += trainingData[i] # wi <- wi + phi
+            self.weights[guessAnswer] -= trainingData[i] # wi <- wi - phi
     
   def classify(self, data ):
     """

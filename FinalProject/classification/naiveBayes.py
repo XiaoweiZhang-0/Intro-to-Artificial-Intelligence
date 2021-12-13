@@ -6,6 +6,7 @@
 # John DeNero (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
 
+import collections
 import util
 import classificationMethod
 import math
@@ -22,6 +23,15 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     self.type = "naivebayes"
     self.k = 1 # this is the smoothing parameter, ** use it in your train method **
     self.automaticTuning = False # Look at this flag to decide whether to choose k automatically ** use this in your train method **
+    self.odds = None
+    self.count = None
+    self.prior = None
+
+  def occurrProb(self, ret):
+    prob = dict(collections.Counter(ret))
+    for k in prob.keys():
+        prob[k] = prob[k] / float(len(ret))
+    return prob
     
   def setSmoothing(self, k):
     """
@@ -61,7 +71,42 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     """
 
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    prior = dict(collections.Counter(trainingLabels)) # num of the training labels
+    for key in prior.keys():
+      prior[key] = prior[key] / float(len(trainingLabels))
+    
+    odds = dict()
+    for x, prob in prior.items():
+      # create a dict for every item
+      odds[x] = collections.defaultdict(list)
+      first = list()
+      second = list() # training data
+
+      # traverse traningLabels and append indexs
+      for i, val in enumerate(trainingLabels):
+        if x == val:
+          first.append(i)
+
+      for i in first:
+        second.append(trainingData[i])
+
+      # fill in the dict with correct data and labels
+      for j in range(len(second)):
+        for k, val in second[j].items():
+          odds[x][k].append(val)
+
+    count = [a for a in prior] # total count
+
+    for x in count:     
+      for k, val in second[x].items():
+        # Get the probabilties for Naive Bayes
+        odds[x][k] = self.occurrProb(odds[x][k])
+        
+
+    self.prior = prior # update the prior
+    self.odds = odds   # update the odds with training data
+    self.count = count # update the count 
+    
         
   def classify(self, testData):
     """
@@ -89,8 +134,15 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     logJoint = util.Counter()
     
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    for x in self.count:    
+      prob = self.prior[x]
+
+      for k, val in datum.items():
+        feature = self.odds[x][k] # get the needed feature data
+        prob += math.log(feature.get(datum[k], 0.01))
     
+    logJoint[x] = prob  # update the new prob back to the log Joint list 
+
     return logJoint
   
   def findHighOddsFeatures(self, label1, label2):
