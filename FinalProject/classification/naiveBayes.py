@@ -23,15 +23,15 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     self.type = "naivebayes"
     self.k = 1 # this is the smoothing parameter, ** use it in your train method **
     self.automaticTuning = False # Look at this flag to decide whether to choose k automatically ** use this in your train method **
-    self.odds = None
-    self.count = None
-    self.prior = None
+    # self.odds = None
+    # self.count = None
+    # self.prior = None
 
-  def occurrProb(self, ret):
-    prob = dict(collections.Counter(ret))
-    for k in prob.keys():
-        prob[k] = prob[k] / float(len(ret))
-    return prob
+  # def occurrProb(self, ret):
+  #   prob = dict(collections.Counter(ret))
+  #   for k in prob.keys():
+  #       prob[k] = prob[k] / float(len(ret))
+  #   return prob
     
   def setSmoothing(self, k):
     """
@@ -47,7 +47,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
       
     # might be useful in your code later...
     # this is a list of all features in the training set.
-    self.features = list(set([ f for datum in trainingData for f in datum.keys() ]));
+    self.features = list(set([ f for datum in trainingData for f in datum.keys() ]))
     
     if (self.automaticTuning):
         kgrid = [0.001, 0.01, 0.05, 0.1, 0.5, 1, 5, 10, 20, 50]
@@ -71,41 +71,29 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     """
 
     "*** YOUR CODE HERE ***"
-    prior = dict(collections.Counter(trainingLabels)) # num of the training labels
-    for key in prior.keys():
-      prior[key] = prior[key] / float(len(trainingLabels))
+    feature= trainingData[0].values()
+    self.prior = util.Counter()
+    self.condProb = {}
+
+    for i in trainingLabels:
+      self.prior[i] += 1
+    self.prior.normalize()
     
-    odds = dict()
-    for x, prob in prior.items():
-      # create a dict for every item
-      odds[x] = collections.defaultdict(list)
-      first = list()
-      second = list() # training data
-
-      # traverse traningLabels and append indexs
-      for i, val in enumerate(trainingLabels):
-        if x == val:
-          first.append(i)
-
-      for i in first:
-        second.append(trainingData[i])
-
-      # fill in the dict with correct data and labels
-      for j in range(len(second)):
-        for k, val in second[j].items():
-          odds[x][k].append(val)
-
-    count = [a for a in prior] # total count
-
-    for x in count:     
-      for k, val in second[x].items():
-        # Get the probabilties for Naive Bayes
-        odds[x][k] = self.occurrProb(odds[x][k])
-        
-
-    self.prior = prior # update the prior
-    self.odds = odds   # update the odds with training data
-    self.count = count # update the count 
+    for i in self.legalLabels:
+      self.condProb[i] = {}
+      for j in trainingData[0]:
+        self.condProb[i][j] = util.Counter()
+        for k in feature:
+          self.condProb[i][j][k] = 1
+    
+    for n, fea in enumerate(trainingData):
+      i = trainingLabels[n] # label
+      for j in fea:
+        self.condProb[i][j][fea[j]] += self.k   # smoothing
+    
+    for i in self.legalLabels:
+      for j in trainingData[0]:
+        self.condProb[i][j].normalize() 
     
         
   def classify(self, testData):
@@ -134,15 +122,12 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     logJoint = util.Counter()
     
     "*** YOUR CODE HERE ***"
-    for x in self.count:    
-      prob = self.prior[x]
-
-      for k, val in datum.items():
-        feature = self.odds[x][k] # get the needed feature data
-        prob += math.log(feature.get(datum[k], 0.01))
+    # logP(w|ci)P(ci)
+    for i in self.legalLabels:
+      logJoint[i] = math.log(self.prior[i], 2)
+      for j in datum:
+        logJoint[i] += math.log(self.condProb[i][j][datum[j]], 2)
     
-    logJoint[x] = prob  # update the new prob back to the log Joint list 
-
     return logJoint
   
   def findHighOddsFeatures(self, label1, label2):
@@ -158,7 +143,3 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     util.raiseNotDefined()
 
     return featuresOdds
-    
-
-    
-      
