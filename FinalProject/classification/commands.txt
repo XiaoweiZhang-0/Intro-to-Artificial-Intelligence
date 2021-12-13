@@ -8,3 +8,7 @@ python dataClassifier.py -c mira --autotune
 python dataClassifier.py -d digits -c naiveBayes -f -a -t 1000  
 python dataClassifier.py -d digits -c minicontest
 python runMinicontest.py
+
+
+## logistic regression
+python dataClassifier.py -c logreg
