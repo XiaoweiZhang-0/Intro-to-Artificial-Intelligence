@@ -17,7 +17,6 @@ import mira
 import samples
 import sys
 import util
-import DecisionTree
 import numpy as np
 import logreg
 
