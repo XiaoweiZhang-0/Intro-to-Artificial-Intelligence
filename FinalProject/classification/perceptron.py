@@ -58,7 +58,7 @@ class PerceptronClassifier:
           guessAnswer = scores.argMax()
           # guessAnswer = self.classify(trainingData[i])[0]
           
-          if exactAnswer != guessAnswer:    
+          if exactAnswer != guessAnswer:
             # update the weights
             self.weights[exactAnswer] += trainingData[i] # wi <- wi + phi
             self.weights[guessAnswer] -= trainingData[i] # wi <- wi - phi

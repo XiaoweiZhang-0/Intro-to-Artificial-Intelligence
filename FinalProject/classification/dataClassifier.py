@@ -19,8 +19,9 @@ import sys
 import util
 import numpy as np
 import logreg
+import time
 
-TEST_SET_SIZE = 100
+TEST_SET_SIZE = 150
 DIGIT_DATUM_WIDTH=28
 DIGIT_DATUM_HEIGHT=28
 FACE_DATUM_WIDTH=60
@@ -321,14 +322,21 @@ def runClassifier(args, options):
   # Extract features
   print( "Extracting features...")
   trainingData = map(featureFunction, rawTrainingData)
-  trainingData = list(trainingData)
+  # trainingData = list(trainingData)
   validationData = map(featureFunction, rawValidationData)
   testData = map(featureFunction, rawTestData)
   print( "Training...")
   if classifier == "logreg":
+    beginTime = time.time()
     classifier = logreg.train_and_tune(trainingData, validationData, trainingLabels, validationLabels, args["labels"])
+    endTime = time.time()
   else:
+    trainingData = list(trainingData)
+    beginTime = time.time()
     classifier.train(trainingData, trainingLabels, validationData, validationLabels)
+    endTime = time.time()
+  duration = endTime - beginTime
+  print("Training time: {} seconds.".format(duration))
   # print_string = '=========max_depth={:d}   min_split_size={:d}    #_d1_features={:d}     #_d2_features={:d}      acc_val {:.2f}'.format(max_depth_best, min_split_size_best, step1_best, step2_best, acc_val_best)
   # f.write(print_string+"\n")
   print( "Validating...")
