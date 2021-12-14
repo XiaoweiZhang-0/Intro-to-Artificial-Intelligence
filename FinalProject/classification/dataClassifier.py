@@ -19,6 +19,7 @@ import sys
 import util
 import numpy as np
 import logreg
+import random 
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH=28
@@ -299,26 +300,39 @@ def runClassifier(args, options):
   classifier = args['classifier']
   printImage = args['printImage']
   # Load data  
-  numTraining = options.training
+  train_num = options.training
+  # test_num = options.test
+  numTraining = 451
   numTest = options.test
 
-
   if(options.data=="faces"):
-    rawTrainingData = samples.loadDataFile("facedata/facedatatrain", numTraining,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
-    trainingLabels = samples.loadLabelsFile("facedata/facedatatrainlabels", numTraining)
+    rawTrainingData_total = samples.loadDataFile("facedata/facedatatrain", numTraining,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
+    trainingLabels_total = samples.loadLabelsFile("facedata/facedatatrainlabels", numTraining)
     rawValidationData = samples.loadDataFile("facedata/facedatatrain", numTest,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
     validationLabels = samples.loadLabelsFile("facedata/facedatatrainlabels", numTest)
     rawTestData = samples.loadDataFile("facedata/facedatatest", numTest,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
     testLabels = samples.loadLabelsFile("facedata/facedatatestlabels", numTest)
   else:
-    rawTrainingData = samples.loadDataFile("digitdata/trainingimages", numTraining,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT)
-    trainingLabels = samples.loadLabelsFile("digitdata/traininglabels", numTraining)
+    rawTrainingData_total = samples.loadDataFile("digitdata/trainingimages", numTraining,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT)
+    trainingLabels_total = samples.loadLabelsFile("digitdata/traininglabels", numTraining)
     rawValidationData = samples.loadDataFile("digitdata/validationimages", numTest,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT)
     validationLabels = samples.loadLabelsFile("digitdata/validationlabels", numTest)
     rawTestData = samples.loadDataFile("digitdata/testimages", numTest,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT)
     testLabels = samples.loadLabelsFile("digitdata/testlabels", numTest)
-    
+  
+  # print(type(rawTrainingData_total))
   # Extract features
+  rawTrainingData = []
+  trainingLabels = []
+  for i in range(train_num):
+    indx = random.randint(0, len(rawTrainingData_total)-1)
+    # print("indx is ", indx)
+    # print(len(rawTrainingData_total))
+    assert(len(rawTrainingData_total)==len(trainingLabels_total))
+    rawTrainingData.append(rawTrainingData_total[indx])
+    rawTrainingData_total.pop(indx)
+    trainingLabels.append(trainingLabels_total[indx])
+    trainingLabels_total.pop(indx)
   print( "Extracting features...")
   trainingData = map(featureFunction, rawTrainingData)
   trainingData = list(trainingData)
