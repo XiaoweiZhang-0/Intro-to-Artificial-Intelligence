@@ -1,1 +1,1 @@
-test acc is 65 correct out of 100 (65.0%).
+test acc is 74 correct out of 100 (74.0%).
