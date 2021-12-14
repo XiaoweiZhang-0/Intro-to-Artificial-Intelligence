@@ -303,10 +303,10 @@ def runClassifier(args, options):
   # Load data  
   train_num = options.training
   # test_num = options.test
-  numTraining = 451
   numTest = options.test
 
   if(options.data=="faces"):
+    numTraining = 451
     rawTrainingData_total = samples.loadDataFile("facedata/facedatatrain", numTraining,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
     trainingLabels_total = samples.loadLabelsFile("facedata/facedatatrainlabels", numTraining)
     rawValidationData = samples.loadDataFile("facedata/facedatatrain", numTest,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
@@ -314,6 +314,7 @@ def runClassifier(args, options):
     rawTestData = samples.loadDataFile("facedata/facedatatest", numTest,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
     testLabels = samples.loadLabelsFile("facedata/facedatatestlabels", numTest)
   else:
+    numTraining = 5000
     rawTrainingData_total = samples.loadDataFile("digitdata/trainingimages", numTraining,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT)
     trainingLabels_total = samples.loadLabelsFile("digitdata/traininglabels", numTraining)
     rawValidationData = samples.loadDataFile("digitdata/validationimages", numTest,DIGIT_DATUM_WIDTH,DIGIT_DATUM_HEIGHT)
