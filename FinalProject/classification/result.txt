@@ -1,1 +1,0 @@
-test acc is 74 correct out of 100 (74.0%).
