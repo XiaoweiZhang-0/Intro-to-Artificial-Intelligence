@@ -200,6 +200,7 @@ def evaluate_accuracy(model, dataset_eval, batch_size_eval=64):
     num_correct += np.sum(model.predict(X) == y)
   return num_correct / dataset_eval.num_examples() * 100.
 
+
 def train(dataset_train, dataset_val, legalLabels, learning_rate=0.1, init_range=0., batch_size=16, regularization_weight=0., max_num_epochs=10, seed=42, loss_improvement=0.01, decay=2., tolerance=5, verbose=False):
   set_seed(seed)
 #   print("================",dataset_train.inputs.shape)  

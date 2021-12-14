@@ -10,6 +10,8 @@ import collections
 import util
 import classificationMethod
 import math
+import copy
+import numpy as np
 
 class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
   """
@@ -21,7 +23,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
   def __init__(self, legalLabels):
     self.legalLabels = legalLabels
     self.type = "naivebayes"
-    self.k = 1 # this is the smoothing parameter, ** use it in your train method **
+    self.k = 0.077 # this is the smoothing parameter, ** use it in your train method **
     self.automaticTuning = False # Look at this flag to decide whether to choose k automatically ** use this in your train method **
     # self.odds = None
     # self.count = None
@@ -50,7 +52,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     self.features = list(set([ f for datum in trainingData for f in datum.keys() ]))
     
     if (self.automaticTuning):
-        kgrid = [0.001, 0.01, 0.05, 0.1, 0.5, 1, 5, 10, 20, 50]
+        kgrid = np.arange(0.001, 0.1, 0.002)
     else:
         kgrid = [self.k]
         
@@ -71,29 +73,76 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     """
 
     "*** YOUR CODE HERE ***"
-    feature= trainingData[0].values()
+    #training data Nxd where N is # of training cases and d is dimension
+    # print("training data is ", len(trainingData))
+    feature= trainingData[0].values() 
+    "feature for first training case"
+    # print("feature is ", feature) 
     self.prior = util.Counter()
     self.condProb = {}
 
+    #calculate prior distribution
     for i in trainingLabels:
       self.prior[i] += 1
     self.prior.normalize()
     
-    for i in self.legalLabels:
+    # acc_val_best = 0
+    # best_smoothing = 0
+    # for smoothing in kgrid:
+
+    #   for i in self.legalLabels: #i for label
+    #     self.condProb[i] = {}
+    #     # print(trainingData[1])
+    #     for j in trainingData[0]: #j for the key for the corresponding feature
+    #       # print("j is ", j)
+    #       self.condProb[i][j] = util.Counter()
+    #       for k in feature: # k for corresponding value for jth feature in 1st case
+    #                   # print("k is ", k)
+    #           self.condProb[i][j][k] = smoothing
+      
+    #   for n, fea in enumerate(trainingData):
+    #     # print(n)
+    #     i = trainingLabels[n] # true label for the nth training case
+    #     for j in fea:
+    #       # print(j)
+    #       self.condProb[i][j][fea[j]] += 1 
+      
+    #   # print(self.condProb)
+    #   for i in self.legalLabels:
+    #     for j in trainingData[0]:
+    #       self.condProb[i][j].normalize() 
+      
+    #   validation = copy.deepcopy(validationData)
+    #   guesses = self.classify(validation)
+    #   # print(len(guesses))
+    #   acc_val = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True) * 100.0 / len(validationLabels)
+    #   print("val acc is ", acc_val)
+    #   if acc_val > acc_val_best:
+    #     acc_val_best = acc_val
+    #     best_smoothing = smoothing
+
+    # print("best_smoothing is ", best_smoothing)  
+    for i in self.legalLabels: #i for label
       self.condProb[i] = {}
-      for j in trainingData[0]:
-        self.condProb[i][j] = util.Counter()
-        for k in feature:
-          self.condProb[i][j][k] = 1
-    
+        # print(trainingData[1])
+      for j in trainingData[0]: #j for the key for the corresponding feature
+          # print("j is ", j)
+          self.condProb[i][j] = util.Counter()
+          for k in feature: # k for corresponding value for jth feature in 1st case
+                      # print("k is ", k)
+              self.condProb[i][j][k] = self.k
+      
     for n, fea in enumerate(trainingData):
-      i = trainingLabels[n] # label
-      for j in fea:
-        self.condProb[i][j][fea[j]] += self.k   # smoothing
-    
+        # print(n)
+        i = trainingLabels[n] # true label for the nth training case
+        for j in fea:
+          # print(j)
+          self.condProb[i][j][fea[j]] += 1 
+      
+      # print(self.condProb)
     for i in self.legalLabels:
-      for j in trainingData[0]:
-        self.condProb[i][j].normalize() 
+        for j in trainingData[0]:
+          self.condProb[i][j].normalize()
     
         
   def classify(self, testData):
@@ -124,9 +173,10 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     "*** YOUR CODE HERE ***"
     # logP(w|ci)P(ci)
     for i in self.legalLabels:
-      logJoint[i] = math.log(self.prior[i], 2)
+      logJoint[i] = math.log(self.prior[i])
       for j in datum:
-        logJoint[i] += math.log(self.condProb[i][j][datum[j]], 2)
+        # print("j is ", datum[j])
+        logJoint[i] += math.log(self.condProb[i][j][datum[j]])
     
     return logJoint
   
