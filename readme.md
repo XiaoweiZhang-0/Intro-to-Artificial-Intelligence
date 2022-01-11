@@ -14,3 +14,14 @@ What [XiaoweiZhang](https://github.com/XiaoweiZhang-0) have done:
 4. Implemented backward A* algorithm to search from the goal and compared to forward A* in terms of running time
 5. Implemented adaptive A* with new heuristic evaluation method and compared to normal A* with mahattan distance as heuristic in terms of running time
 ```
+## Final Project
+
+Overview: This assignment is to use three different machine learning techniques---naive bayes, perceptron, and logistic regression for OCR with digits and face recognition
+
+What [XiaoweiZhang](https://github.com/XiaoweiZhang-0) have done:
+```
+1.Fixed the provided code and upgraded it for Python 3.0(Previous was for Python 2.0)
+2.Implemented logistic regression from scratch including feature normalization, batch update, and autotune for best hyperparameter.
+3.Fixed bugs in naive bayes code to raise its test accuracy to 77% for OCR with digits and 88% for face recognition.
+4.Result: All three algorithms have at least 75% accuracy for OCR with digits and 85% accuracy for face recognition
+```
